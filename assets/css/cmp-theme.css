@@ -1,0 +1,219 @@
+/* ==========================================================================
+   NovaMart — Securiti cookie banner theme, embedded site-side.
+   Loaded on every page so the Securiti banner/preference-center is branded
+   without needing console access. Selectors are prefixed with `html body`
+   (high specificity) + !important so they beat the SDK's inline styles and
+   the console's compiled theme (which sets a dark-red background here).
+   Brand: red #E4002B / dark #B80023 / ink #12141C, Inter, pill buttons.
+   ========================================================================== */
+
+/* ---- Brand accent variables --------------------------------------------
+   The SDK paints its accent (toggle-on, active IAB tab, focus ring, links)
+   from the console theme via these custom properties — read straight out of
+   cookie-consent-sdk-<ver>.js. NovaMart's console accent is still the default
+   BLUE, so re-point the variables to brand red. Author !important beats the
+   SDK's inline element.style.setProperty(...), and we set them on every
+   element the SDK might host them on so the override always resolves. */
+:root,
+html, body,
+html body .cmp-theme,
+html body .cmp-modal,
+html body .cc-window,
+html body .f-gpc-banner{
+  --prefButtonColor:#E4002B !important;   --prefButtonTextColor:#ffffff !important;
+  --prefSelectorBgColor:#E4002B !important; --prefSelectorTextColor:#ffffff !important;
+  --prefLinkColor:#E4002B !important;      --prefFocusRingColor:#E4002B !important;
+  --prefTextColor:#12141C !important;      --prefBodyColor:#ffffff !important;
+  --prefFooterColor:#12141C !important;
+}
+
+/* ---- Banner bar --------------------------------------------------------- */
+html body .cc-window{ background-color:#ffffff !important; color:#12141C !important; border-top:4px solid #E4002B !important; border-radius:16px !important; box-shadow:0 20px 50px -18px rgba(18,20,28,.35) !important; font-family:'Inter',ui-sans-serif,system-ui,sans-serif !important; }
+html body .cc-window .cc-message{ color:#3f434d !important; }
+html body .cc-window .cc-link,
+html body .cc-window .cc-message-container a,
+html body .cc-window.cc-banner p a{ color:#E4002B !important; text-decoration:underline !important; }
+html body .cc-window .cc-btn{ border-radius:9999px !important; font-weight:800 !important; }
+html body .cc-window .cc-btn.cc-allow{ background-color:#E4002B !important; color:#ffffff !important; border:2px solid #E4002B !important; }
+html body .cc-window .cc-btn.cc-allow:hover{ background-color:#B80023 !important; border-color:#B80023 !important; }
+html body .cc-window .cc-btn.cc-deny,
+html body .cc-window .cc-btn.cc-dismiss{ background-color:#ffffff !important; color:#12141C !important; border:2px solid #e2e8f0 !important; }
+html body .cc-window .cc-btn.cc-deny:hover,
+html body .cc-window .cc-btn.cc-dismiss:hover{ border-color:#12141C !important; }
+html body .cc-window .cc-close.cc-close-banner-btn{ color:#12141C !important; }
+/* "Advanced Settings" / "Cookie Preferences" banner control = .cc-link.cmp-pref-link
+   (a.k.a. .cc-pref-open). VERIFIED live in an EU browser: its TEXT is already brand
+   red, but the control's ICON paths are HARDCODED dark (#180F33), so the whole thing
+   reads as greyed/disabled — it is NOT (it opens the preference center). Force text +
+   underline + every filled/stroked icon shape to brand red at full opacity. */
+html body .cc-window .cmp-pref-link,
+html body .cc-window .cc-pref-open,
+html body .cc-window .cc-btn.cc-btn-format:not(.cc-allow):not(.cc-deny):not(.cc-dismiss){
+  color:#E4002B !important; opacity:1 !important; text-decoration-color:#E4002B !important; }
+html body .cc-window .cmp-pref-link svg [fill]:not([fill="none"]),
+html body .cc-window .cc-pref-open svg [fill]:not([fill="none"]){ fill:#E4002B !important; }
+html body .cc-window .cmp-pref-link svg [stroke]:not([stroke="none"]),
+html body .cc-window .cc-pref-open svg [stroke]:not([stroke="none"]){ stroke:#E4002B !important; }
+
+/* ---- Preference-center modal -------------------------------------------- */
+html body .cmp-modal{ background-color:#ffffff !important; color:#12141C !important; font-family:'Inter',ui-sans-serif,system-ui,sans-serif !important; }
+/* Default EVERY text element in the modal to readable dark. The console theme
+   colours text white for its dark background, which vanishes on our white modal
+   (category labels, switch labels, etc.). This is low-specificity, so the brand
+   accents, links, footer logo and buttons below keep their colours. */
+html body .cmp-modal *{ color:#12141C !important; }
+html body .cmp-modal .cmp-modal__title{ color:#12141C !important; font-weight:800 !important; }
+html body .cmp-modal .cmp-modal__sub-title a{ color:#E4002B !important; text-decoration:underline !important; }
+html body .cmp-modal .cmp-modal__close,
+html body .cmp-modal .cmp-modal__close svg{ color:#12141C !important; fill:#12141C !important; }
+
+/* header + tabs */
+html body .cmp-modal .cmp-tabs__nav ul li{ color:#64748b !important; }
+html body .cmp-modal .cmp-tabs__nav ul li.is-active{ color:#E4002B !important; border-color:#E4002B !important; }
+html body .cmp-modal .cmp-tabs__title,
+html body .cmp-modal .cmp-tabs__title.cmp-fixed-wd-title{ color:#E4002B !important; }
+/* IAB/TCF tab bars — the SDK renders THESE tabs as <button> elements directly in
+   .cmp-horizontal-tabs__nav (top: Cookie Preferences / IAB Purposes / Vendor List)
+   and .cmp-horizontal-tabs__nav.subtabs (the Purposes/… sub-bar) — NOT ul>li>a.
+   That's why the earlier li/a rule missed them and the labels stayed dark
+   (invisible on the dark/red fills). Style the buttons directly: inactive = dark
+   ink + WHITE label, active = brand red + white. The ul/li/a form below is kept
+   for the non-IAB banner variant. */
+html body .cmp-modal .cmp-horizontal-tabs__nav button{ background-color:#12141C !important; color:#ffffff !important; }
+html body .cmp-modal .cmp-horizontal-tabs__nav button.is-active{ background-color:#E4002B !important; color:#ffffff !important; }
+html body .cmp-modal .cmp-horizontal-tabs__nav ul li a{ background-color:#12141C !important; }
+html body .cmp-modal .cmp-horizontal-tabs__nav ul li.is-active a{ background-color:#E4002B !important; }
+html body .cmp-modal .cmp-horizontal-tabs__nav ul li a,
+html body .cmp-modal .cmp-horizontal-tabs__nav ul li a *{ color:#ffffff !important; }
+html body .cmp-modal li.is-active .cmp-check-icon,
+html body .cmp-modal .cmp-check-icon{ color:#E4002B !important; fill:#E4002B !important; }
+
+/* toggles — OFF = grey, ON = brand red. The IAB/TCF UI flags "on" with the class
+   .cmp-category-consented (NOT the native :checked — that's why the SDK blue used
+   to win), so target that too. Essential is readonly/always-on → dark red so it
+   reads as locked instead of the old salmon. (Backstop for --prefSelectorBgColor.) */
+html body .cmp-modal .cmp-switch__slider{ background-color:#cbd5e1 !important; }
+html body .cmp-modal .cmp-switch.readonly input+.cmp-switch__slider,
+html body .cmp-modal .cmp-switch.readonly .cmp-switch__slider{ background-color:#B80023 !important; }
+html body .cmp-modal .cmp-switch input:checked+.cmp-switch__slider,
+html body .cmp-modal .cmp-category-consented .cmp-switch__slider,
+html body .cmp-modal .cmp-switch.cmp-category-consented .cmp-switch__slider,
+html body .cmp-modal .cmp-category-consented input+.cmp-switch__slider{ background-color:#E4002B !important; }
+html body .cmp-modal .cmp-switch input:checked+.cmp-switch__slider svg,
+html body .cmp-modal .cmp-category-consented .cmp-switch__slider svg{ fill:#ffffff !important; }
+
+/* cookie-list / accordion detail text — renders white (built for the old dark
+   console theme); force readable dark on the white modal so cookie names,
+   descriptions and tables are visible. */
+html body .cmp-modal .cmp-tabs__sub-title,
+html body .cmp-modal .cmp-accordion__title,
+html body .cmp-modal .cmp-accordion__sub-title,
+html body .cmp-modal .cmp-cookie-head,
+html body .cmp-modal .cmp-cookie-text,
+html body .cmp-modal .cmp-cookie-info,
+html body .cmp-modal .cmp-list-tile,
+html body .cmp-modal .cmp-details-view td,
+html body .cmp-modal .cmp-details-view th { color:#12141C !important; }
+html body .cmp-modal .cmp-accordion a,
+html body .cmp-modal .cmp-accordion__content a { color:#E4002B !important; text-decoration:underline !important; word-break:break-all; }
+
+/* footer + its wrappers — DARK bar so the light "Powered by securiti" logo is readable */
+/* High-specificity (.cmp-theme .cmp-modal … footer) so the published SDK theme, which
+   now paints a light footer, can't override us and hide the light securiti logo. */
+html body .cmp-theme .cmp-modal .cmp-modal__footer,
+html body .cmp-theme .cmp-modal .cmp-modal__footer .cmp-btn-wrapper,
+html body .cmp-theme .cmp-modal .cmp-modal__footer .cmp-logo-wrapper,
+html body .cmp-modal__footer,
+html body .cmp-modal .cmp-btn-wrapper,
+html body .cmp-modal .cmp-logo-wrapper{ background-color:#12141C !important; }
+html body .cmp-theme .cmp-modal .cmp-modal__footer .cmp-logo-wrapper,
+html body .cmp-theme .cmp-modal .cmp-modal__footer .cmp-logo-wrapper *,
+html body .cmp-modal .cmp-logo-wrapper, html body .cmp-modal .cmp-logo-wrapper *{ color:#e5e7eb !important; fill:#e5e7eb !important; }
+html body .cmp-modal .cmp-save-btn{ background-color:#E4002B !important; color:#ffffff !important; border:2px solid #E4002B !important; border-radius:9999px !important; font-weight:800 !important; }
+html body .cmp-modal .cmp-decline-btn{ background-color:transparent !important; color:#ffffff !important; border:2px solid rgba(255,255,255,.4) !important; border-radius:9999px !important; font-weight:800 !important; }
+html body .cmp-modal .cmp-link-btn{ color:#E4002B !important; }
+
+/* Fit the preference-center modal to the viewport on ANY screen height so the header
+   and footer never clip. The SDK gives the modal a fixed pixel height and vertically
+   centers it, which clips the top + bottom on shorter viewports. Re-center robustly
+   with translate(-50%,-50%), cap the height to the viewport, make the modal a flex
+   column, pin the header + footer, and let ONLY the middle region scroll (one
+   scrollbar). Then keep content surfaces white so the console's dark theme can't show
+   through. */
+html body .cmp-modal{
+  left:50% !important; top:50% !important; transform:translate(-50%,-50%) !important;
+  max-height:calc(100vh - 24px) !important; height:auto !important;
+  display:flex !important; flex-direction:column !important; overflow:hidden !important;
+}
+html body .cmp-modal .cmp-modal__body{
+  display:flex !important; flex-direction:column !important;
+  min-height:0 !important; max-height:100% !important; overflow:hidden !important;
+}
+html body .cmp-modal .cmp-modal__header,
+html body .cmp-modal .cmp-modal__footer{ flex:0 0 auto !important; }
+html body .cmp-modal .cmp-horizontal-tabs{ flex:1 1 auto !important; min-height:0 !important; overflow-y:auto !important; }
+/* Inner panels must NOT scroll independently, or a short viewport shows two scrollbars.
+   Let them grow; the single scroll lives on .cmp-horizontal-tabs above. */
+html body .cmp-modal .cmp-horizontal-tabs__content,
+html body .cmp-modal .cmp-tabs,
+html body .cmp-modal .cmp-tabs__content,
+html body .cmp-modal .cmp-details-view{ overflow:visible !important; max-height:none !important; height:auto !important; }
+html body .cmp-modal .cmp-modal__body,
+html body .cmp-modal .cmp-details-view,
+html body .cmp-modal .cmp-details-header,
+html body .cmp-modal .cmp-tabs__content,
+html body .cmp-modal .cmp-cookie-info,
+html body .cmp-modal .cmp-accordion,
+html body .cmp-modal .cmp-accordion__content,
+html body .cmp-modal .cmp-list-tile{ background-color:#ffffff !important; }
+
+/* Vendor List tab — the console theme paints the vendor rows (.cmp-vendor-list-tile,
+   name in <h3>) and the "Filter by Purpose" dropdown DARK; combined with the
+   modal-wide dark text that hid every label (dark on dark). Force these surfaces
+   WHITE so the dark text reads, matching every other content surface. */
+html body .cmp-modal .cmp-vendor-list,
+html body .cmp-modal .cmp-vendor-list-tile,
+html body .cmp-modal .cmp-vendor-list-tile-content,
+html body .cmp-modal .cmp-vendor-list-tile-action{ background-color:#ffffff !important; }
+html body .cmp-modal .cmp-vendor-list-tile{ border:1px solid #e2e8f0 !important; border-radius:10px !important; }
+html body .cmp-modal .cmp-vendor-list-tile h3,
+html body .cmp-modal .cmp-vendor-list-tile p{ color:#12141C !important; }
+html body .cmp-modal .cmp-vendor-list-tile a{ color:#E4002B !important; text-decoration:underline !important; }
+/* purpose-filter dropdown (Filter by Purpose) */
+html body .cmp-modal .cmp-dropdown,
+html body .cmp-modal .cmp-dropdown-button,
+html body .cmp-modal .cmp-dropdown-list,
+html body .cmp-modal .cmp-dropdown-label{ background-color:#ffffff !important; color:#12141C !important; border:1px solid #e2e8f0 !important; }
+html body .cmp-modal .cmp-dropdown-button,
+html body .cmp-modal .cmp-dropdown-button *,
+html body .cmp-modal .cmp-dropdown-list *{ color:#12141C !important; }
+
+/* ---- DURABLE FIX: no console-dark surface anywhere in the modal body -------
+   The console Appearance theme is dark, so every IAB sub-view the SDK renders
+   (purpose / feature / vendor detail, accordions, filter panels…) can bring its
+   own dark background — which, combined with our dark body text, shows up as an
+   unreadable black block. Chasing them class-by-class is whack-a-mole, so make
+   EVERY element inside the modal body transparent (the modal itself is white →
+   they render white), and exclude only the elements that are meant to be dark or
+   brand-coloured: the tab bar, the footer + its wrappers, the toggles, and the
+   action buttons. Any future sub-view is covered automatically. */
+/* NOTE: must stay on ONE line — a line break here would become a descendant
+   combinator (`* :not(…)`), which is a different (and wrong) selector. */
+html body .cmp-modal .cmp-modal__body *:not(.cmp-modal__footer):not(.cmp-modal__footer *):not(.cmp-horizontal-tabs__nav):not(.cmp-horizontal-tabs__nav *):not(.cmp-switch):not(.cmp-switch *):not(.cmp-save-btn):not(.cmp-decline-btn):not(.cmp-btn-wrapper):not(.cmp-logo-wrapper){ background-color:transparent !important; }
+
+/* revoke-consent floating button */
+html body .cmp-revoke-consent{ background-color:#E4002B !important; color:#ffffff !important; }
+html body .cmp-revoke-consent:hover{ background-color:#B80023 !important; }
+
+/* ---- GPC (Global Privacy Control) flyout -------------------------------- */
+html body .f-gpc-banner{ background-color:#ffffff !important; color:#12141C !important; border-top:4px solid #E4002B !important; }
+html body .f-gpc-banner .f-banner-header span{ color:#12141C !important; font-weight:800 !important; }
+html body .f-gpc-banner .f-banner-header svg path{ fill:#E4002B !important; }
+html body .f-gpc-banner .f-banner-body-text{ color:#3f434d !important; }
+html body .f-gpc-banner .f-banner-link a,
+html body .f-gpc-banner .f-banner-link .f-cmp-cookie-pref-tab{ color:#E4002B !important; }
+html body .f-gpc-banner button{ background-color:#E4002B !important; color:#ffffff !important; border:2px solid #E4002B !important; border-radius:9999px !important; font-weight:800 !important; }
+html body .f-gpc-banner .f-banner-close-btn,
+html body .f-gpc-banner .f-banner-close-btn svg path{ color:#12141C !important; fill:#12141C !important; }
+html body .f-gpc-flyout{ background-color:#E4002B !important; }
+html body .f-gpc-flyout .f-gpc-logo path{ fill:#ffffff !important; }
