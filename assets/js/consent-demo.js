@@ -156,7 +156,7 @@
     // Reset button (always visible) — bottom-right
     var reset = el(
       '<button id="cd-reset" title="Clear all cookies & consent, then reload" ' +
-      'style="position:fixed;right:16px;bottom:16px;z-index:2147483000;cursor:pointer;border:none;' +
+      'style="position:fixed;right:16px;bottom:80px;z-index:2147483000;cursor:pointer;border:none;' +
       'border-radius:999px;padding:11px 16px;font:700 13px Inter,system-ui,sans-serif;color:#fff;' +
       'background:' + ACCENT + ';box-shadow:0 10px 30px -10px rgba(0,0,0,.45)">↺ Reset consent</button>');
     reset.addEventListener("click", resetConsent);
@@ -165,7 +165,7 @@
     // Widgets stack — bottom-right, above the reset button
     var stack = document.createElement("div");
     stack.id = "cd-stack";
-    stack.style.cssText = "position:fixed;right:16px;bottom:64px;z-index:2147482000;display:flex;" +
+    stack.style.cssText = "position:fixed;right:16px;bottom:128px;z-index:2147482000;display:flex;" +
       "flex-direction:column;gap:10px;align-items:flex-end;max-width:300px";
     host.appendChild(stack);
 
@@ -208,7 +208,7 @@
       'box-shadow:0 10px 30px -10px rgba(0,0,0,.45)">💬 Chat with us</button>');
     stack.appendChild(chatBtn);
     var chat = el(
-      '<div style="display:none;position:fixed;right:16px;bottom:118px;z-index:2147483001;width:300px;' +
+      '<div style="display:none;position:fixed;right:16px;bottom:182px;z-index:2147483001;width:300px;' +
       'background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;' +
       'box-shadow:0 18px 44px -14px rgba(0,0,0,.5);font:400 13px Inter,system-ui,sans-serif">' +
       '<div style="background:' + ACCENT + ';color:#fff;padding:12px 14px;font-weight:800;display:flex;justify-content:space-between;align-items:center">' + BRAND + ' Support <span class="cd-chat-x" style="cursor:pointer;font-weight:400;font-size:20px;line-height:1">×</span></div>' +
@@ -393,7 +393,7 @@
       return;
     }
     stack.style.display = "flex";
-    var floor = 16;
+    var floor = 80;
     var bar = document.querySelector(".cc-window");
     if (cdVisible(bar)) {
       var r = bar.getBoundingClientRect();
