@@ -320,7 +320,7 @@
       var allowed = c.cat === "essential" ? true
                   : c.cat === "analytics" ? state.analytics
                   : c.cat === "marketing" ? state.marketing : false;
-      if (allowed) { if (c.cat === "essential") setCk(c); } else delCk(c.n);
+      if (allowed && c.cat === "essential") setCk(c);
     });
   }
 
