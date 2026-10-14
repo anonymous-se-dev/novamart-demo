@@ -2,7 +2,8 @@
    NovaMart — front-end behaviour
    --------------------------------------------------------------------------
    Cookie consent is owned by the SECURITI Cookie Consent SDK (loaded in
-   <head>). Securiti renders the banner + preference center and drives Google
+   <head>
+<script type="text/javascript" src="https://cdn-prod.securiti.ai/consent/auto_blocking/6922dabb-aab2-4f98-b911-e35595c14ff3/0b83568e-b1d6-4200-a827-0d678939b333.js"></script>). Securiti renders the banner + preference center and drives Google
    Consent Mode. The footer links call Securiti's global
    showConsentPreferencesPopup() to re-open the preference center.
 
