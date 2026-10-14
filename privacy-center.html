@@ -43,10 +43,90 @@
 </head>
 <body class="bg-white text-brand-ink antialiased">
 
-<main>
-  <!-- SECURITI · PRIVACY CENTER — full-width embed -->
-  <iframe src="about:blank" title="NovaMart Privacy Center" style="border:none;width:100%;height:100vh;min-height:900px;display:block"></iframe>
+<main class="bg-white">
+  <!-- Privacy Center (built by build_sites.py) -->
+  <section style="background:linear-gradient(135deg,#E4002B 0%,#12141C 100%)" class="text-white">
+    <div class="max-w-6xl mx-auto px-6 py-14">
+      <a href="index.html" class="text-white/70 text-sm hover:text-white">← Back to NovaMart</a>
+      <h1 class="text-4xl md:text-5xl font-extrabold mt-4">NovaMart Privacy Center</h1>
+      <p class="text-white/80 mt-3 max-w-2xl text-lg">See and control how NovaMart uses your data: cookie choices,
+        your right to opt out of sale and sharing, and requests to access or delete your information.</p>
+    </div>
+  </section>
+
+  <div id="pc-gpc" class="hidden max-w-6xl mx-auto px-6 mt-6">
+    <div class="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 px-5 py-4 text-sm">
+      <b>Global Privacy Control detected.</b> Your browser has asked us not to sell or share your personal
+      information, so advertising cookies stay off.</div>
+  </div>
+
+  <section class="max-w-6xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-6">
+    <div class="rounded-2xl border border-slate-200 p-6">
+      <div class="text-2xl mb-2">🍪</div><h2 class="font-extrabold text-lg mb-1">Cookie preferences</h2>
+      <p class="text-slate-600 text-sm mb-4">Choose which categories of cookies we may use. Change your mind at any time.</p>
+      <button type="button" onclick="window.showConsentPreferencesPopup && showConsentPreferencesPopup()" style="display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;color:#fff;background:#E4002B;text-decoration:none;border:none;cursor:pointer">Manage cookies</button>
+    </div>
+    <div class="rounded-2xl border border-slate-200 p-6">
+      <div class="text-2xl mb-2">🚫</div><h2 class="font-extrabold text-lg mb-1">Do Not Sell or Share My Personal Information</h2>
+      <p class="text-slate-600 text-sm mb-4">Opt out of the sale or sharing of your data for targeted advertising.</p>
+      <a href="https://privacy-central.securiti.ai/#/dsr/7fb7681e-61d4-4b2c-a397-ba7d54414c3b" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;color:#fff;background:#E4002B;text-decoration:none;border:none;cursor:pointer">Opt out ↗</a>
+    </div>
+    <div class="rounded-2xl border border-slate-200 p-6">
+      <div class="text-2xl mb-2">📄</div><h2 class="font-extrabold text-lg mb-1">Privacy notice</h2>
+      <p class="text-slate-600 text-sm mb-4">How we collect, use and share personal information, and your rights.</p>
+      <a href="privacy-policy.html" style="display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:9px 17px;font-weight:700;font-size:14px;color:#E4002B;background:#fff;border:2px solid #E4002B;text-decoration:none;cursor:pointer">Read the notice</a>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-6 pb-4">
+    <div class="rounded-2xl border border-slate-200 p-6">
+      <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+        <h2 class="font-extrabold text-lg">Your current cookie choices</h2>
+        <span id="pc-when" class="text-xs text-slate-500"></span>
+      </div>
+      <div id="pc-status" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm"></div>
+      <p class="text-xs text-slate-500 mt-4">Read live from your Securiti consent record in this browser.</p>
+    </div>
+  </section>
+
+  <section id="request" class="max-w-6xl mx-auto px-6 py-10">
+    <h2 class="text-2xl font-extrabold mb-4">Submit a privacy request</h2>
+    <div class="grid md:grid-cols-2 gap-6 items-start"><div><p class="text-slate-600 mb-4">Requests are handled by our privacy team through Securiti. You can ask to:</p><ul class="space-y-2 text-slate-700 mb-6"><li>• <b>Know / access</b> the personal information we hold about you</li><li>• <b>Delete</b> your personal information</li><li>• <b>Correct</b> inaccurate information</li><li>• <b>Opt out</b> of the sale or sharing of your personal information</li><li>• <b>Limit</b> the use of sensitive personal information</li></ul><a href="https://privacy-central.securiti.ai/#/dsr/7fb7681e-61d4-4b2c-a397-ba7d54414c3b" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;color:#fff;background:#E4002B;text-decoration:none;border:none;cursor:pointer">Open the request form ↗</a></div><div class="rounded-2xl bg-slate-50 border border-slate-200 p-6 text-sm text-slate-600"><div class="font-bold text-slate-900 mb-2">What happens next</div><ol class="space-y-2 list-decimal list-inside"><li>We verify your identity by email.</li><li>We search every system that holds customer data.</li><li>You receive a response within 45 days, as required by the CCPA/CPRA.</li></ol></div></div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-6 pb-16 text-sm text-slate-500">
+    Questions? Contact <a class="underline" href="mailto:privacy@novamart-demo.netlify.app">privacy@novamart-demo.netlify.app</a>.
+  </section>
 </main>
+<script>
+(function () {
+  var CATS = {"essential": 42, "analytics": 43, "advertising": 44, "performance": 45, "social": 46, "geo": 47, "biometrics": 48}, LABELS = [["essential", "Essential"], ["performance", "Performance & Functionality"], ["analytics", "Analytics & Customization"], ["advertising", "Advertising"], ["social", "Social Networking"], ["geo", "Precise Geolocation"], ["biometrics", "Biometrics"]];
+  try { if (navigator.globalPrivacyControl === true) document.getElementById("pc-gpc").classList.remove("hidden"); } catch (e) {}
+  function consents() {
+    var m = document.cookie.match(/(?:^|;\s*)__privaci_cookie_consents=([^;]+)/);
+    if (!m) return null;
+    var raw = m[1], tries = [];
+    try { tries.push(atob(raw)); } catch (e) {}
+    try { tries.push(decodeURIComponent(raw)); } catch (e) {}
+    tries.push(raw);
+    for (var i = 0; i < tries.length; i++) { try { var o = JSON.parse(tries[i]); if (o && o.consents) return o.consents; } catch (e) {} }
+    return null;
+  }
+  function render() {
+    var c = consents(), box = document.getElementById("pc-status");
+    if (!box) return;
+    box.innerHTML = LABELS.map(function (l) {
+      var id = CATS[l[0]], on = l[0] === "essential" || (c && id !== undefined && String(c[id]) === "1");
+      var state = l[0] === "essential" ? "Always on" : (c ? (on ? "Allowed" : "Off") : "Not chosen yet");
+      var col = l[0] === "essential" ? "#64748b" : (on ? "#047857" : "#b91c1c");
+      return '<div style="border:1px solid #e2e8f0;border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;gap:8px">' +
+             '<span>' + l[1] + '</span><b style="color:' + col + '">' + state + '</b></div>';
+    }).join("");
+    document.getElementById("pc-when").textContent = c ? "Consent recorded" : "No choice recorded yet";
+  }
+  render(); setInterval(render, 1000);
+})();
+</script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>

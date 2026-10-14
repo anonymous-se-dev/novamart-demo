@@ -205,6 +205,7 @@
 
   /* ---- Privacy Center / DSR scaffold ---------------------------------- */
   function openDSR(u) {
+    location.href = "privacy-center.html#request"; return;
     var body = el(
       '<div style="padding:22px">' +
       '<div style="font:800 19px \'Playfair Display\',Inter,serif;margin-bottom:2px">Privacy Center</div>' +
