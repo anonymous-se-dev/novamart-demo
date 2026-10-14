@@ -28,7 +28,7 @@
   }
   var MKT = ids("data-mkt");                 // Advertising, Social
   var ANA = ids("data-ana");                 // Analytics, Performance
-  var ESS = SITE === "nm" ? "12" : SITE === "mfg" ? "4" : "";
+  var ESS = "42";   // this domain's Essential category ID
   var BKEY = SITE + "_ad_personalization";   // personalize.js behaviour cookie
   var LSKEY = SITE + "_demo_user";           // session marker (localStorage)
 
