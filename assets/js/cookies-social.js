@@ -120,6 +120,14 @@
         else del(P + ck.n);
       });
     });
+    // Google Analytics keeps its _ga / _ga_<id> cookies after analytics_storage is
+    // denied (Consent Mode just stops using them), so cleanup removes them too.
+    if (ROLE === "cleanup" && !granted("analytics", c)) {
+      document.cookie.split(/;\s*/).forEach(function (kv) {
+        var n = kv.split("=")[0];
+        if (n === "_ga" || n.indexOf("_ga_") === 0) del(n);
+      });
+    }
   }
 
   sync();
