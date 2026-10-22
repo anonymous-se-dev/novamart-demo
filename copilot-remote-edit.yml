@@ -1,0 +1,137 @@
+# Copilot remote edit
+# Lets Copilot change this repo through your GitHub connection.
+# - Runs only on a repository_dispatch event, which needs a token with write access to this repo.
+# - Every change lands on a branch named "copilot-..."; main changes only when you merge a pull request.
+# - It will not write inside .git/ or .github/, so it cannot change its own workflow.
+name: Copilot remote edit
+
+on:
+  repository_dispatch:
+    types: [copilot-apply, copilot-snapshot, copilot-cleanup]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: copilot-remote-edit
+  cancel-in-progress: false
+
+jobs:
+  edit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply the requested change
+        env:
+          EVENT_TYPE: ${{ github.event.action }}
+          PAYLOAD: ${{ toJSON(github.event.client_payload) }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        shell: python
+        run: |
+          import base64, gzip, json, os, pathlib, re, subprocess, sys
+
+          event = os.environ["EVENT_TYPE"]
+          payload = json.loads(os.environ.get("PAYLOAD") or "{}") or {}
+          default_branch = os.environ["DEFAULT_BRANCH"]
+          root = pathlib.Path.cwd().resolve()
+          SNAP_DIR = "_copilot_snapshot"
+          BRANCH_RE = re.compile(r"copilot-[A-Za-z0-9][A-Za-z0-9._-]{0,79}")
+          BASE_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._/-]{0,99}")
+
+          def run(*args, capture=False):
+              r = subprocess.run(list(args), check=True, text=True, capture_output=capture)
+              return r.stdout if capture else None
+
+          def fail(msg):
+              print(f"::error::{msg}")
+              sys.exit(1)
+
+          def check_branch(name):
+              if (not isinstance(name, str) or not BRANCH_RE.fullmatch(name)
+                      or ".." in name or name.endswith((".", ".lock"))):
+                  fail(f"Branch must start with 'copilot-' and use only letters, numbers, '.', '_' or '-': {name!r}")
+              return name
+
+          def safe_path(rel):
+              if (not isinstance(rel, str) or not rel or rel.startswith("/")
+                      or "\\" in rel or "\x00" in rel):
+                  fail(f"Invalid path: {rel!r}")
+              target = (root / rel).resolve()
+              if target == root or root not in target.parents:
+                  fail(f"Path is outside the repository: {rel!r}")
+              if target.relative_to(root).parts[0] in (".git", ".github"):
+                  fail(f"Protected path: {rel!r}")
+              return target
+
+          def remote_branch_exists(name):
+              return subprocess.run(["git", "ls-remote", "--exit-code", "--heads", "origin", name],
+                                    capture_output=True).returncode == 0
+
+          run("git", "config", "user.name", "github-actions[bot]")
+          run("git", "config", "user.email", "41898283+github-actions[bot]@users.noreply.github.com")
+
+          if event == "copilot-cleanup":
+              for name in payload.get("branches", []):
+                  check_branch(name)
+                  if remote_branch_exists(name):
+                      run("git", "push", "origin", "--delete", name)
+                      print(f"Deleted branch {name}")
+              sys.exit(0)
+
+          branch = check_branch(payload.get("branch"))
+          base = payload.get("base") or default_branch
+          if not isinstance(base, str) or not BASE_RE.fullmatch(base) or ".." in base:
+              fail(f"Invalid base branch: {base!r}")
+
+          if remote_branch_exists(branch):
+              run("git", "fetch", "-q", "origin", branch)
+              run("git", "checkout", "-q", "-B", branch, f"origin/{branch}")
+          else:
+              run("git", "fetch", "-q", "origin", base)
+              run("git", "checkout", "-q", "-B", branch, f"origin/{base}")
+
+          if event == "copilot-apply":
+              for f in payload.get("files", []):
+                  target = safe_path(f.get("path"))
+                  data = base64.b64decode(f.get("b64", ""), validate=True)
+                  if f.get("gzip"):
+                      data = gzip.decompress(data)
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(data)
+                  run("git", "add", "--", str(target))
+                  print(f"Wrote {f.get('path')} ({len(data)} bytes)")
+              for rel in payload.get("delete", []):
+                  target = safe_path(rel)
+                  if target.exists():
+                      run("git", "rm", "-r", "-q", "--", str(target))
+                      print(f"Deleted {rel}")
+              message = str(payload.get("message") or "Update via Copilot")
+          elif event == "copilot-snapshot":
+              snap = root / SNAP_DIR
+              for rel in filter(None, run("git", "ls-files", "-z", capture=True).split("\0")):
+                  src = root / rel
+                  if rel.startswith(SNAP_DIR + "/") or not src.is_file():
+                      continue
+                  data = src.read_bytes()
+                  if b"\0" in data[:8000]:
+                      continue  # skip images and other binary files
+                  dst = snap / rel
+                  dst.parent.mkdir(parents=True, exist_ok=True)
+                  dst.write_bytes(data)
+              if snap.exists():
+                  run("git", "add", "--", str(snap))
+              message = "Read-only snapshot for Copilot (do not merge)"
+          else:
+              fail(f"Unknown event type: {event}")
+
+          if subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode == 0:
+              print("No changes to commit.")
+          else:
+              run("git", "commit", "-q", "-m", message)
+          run("git", "push", "-q", "origin", f"HEAD:refs/heads/{branch}")
+          print(f"Pushed branch {branch}")
